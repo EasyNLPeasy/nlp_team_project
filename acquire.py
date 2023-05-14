@@ -22,7 +22,7 @@ from env import github_token, github_username
 # TODO: Add your github username to your env.py file under the variable `github_username`
 # TODO: Add more repositories to the `REPOS` list below.
 
-REPOS = []
+REPOS = ['./AUTOMATIC1111/stable-diffusion-webui', './bmaltais/kohya_ss', './donnemartin/system-design-primer', './Z4nzu/hackingtool', './ChanseyIsTheBest/NX-60FPS-RES-GFX-Cheats', './BlinkDL/RWKV-LM', './neonbjb/tortoise-tts', './neuml/txtai', './TapiocaFox/Daijishou', './coqui-ai/TTS', './OpenBB-finance/OpenBBTerminal', './d8ahazard/sd_dreambooth_extension', './catppuccin/gtk', './tinyvision/SOLIDER', './raspberrypi/usbboot', './sdatkinson/NeuralAmpModelerPlugin', './Zero6992/chatGPT-discord-bot', './pittcsc/Summer2023-Internships', './elebumm/RedditVideoMakerBot', './openai/whisper', './InstaPy/InstaPy', './rawandahmad698/PyChatGPT', './Dong-learn9/TVBox-zyjk', './StevenBlack/hosts', './riffusion/riffusion']
  
 
 headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
