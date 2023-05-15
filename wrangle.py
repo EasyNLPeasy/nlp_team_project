@@ -66,8 +66,15 @@ def lemmatize(some_string):
     The function takes in a string and applies the lemmatizer to it. returns the string.
     '''
     lemmatizer = nltk.WordNetLemmatizer()
-    return ' '.join(
+    some_string = ' '.join(
         [lemmatizer.lemmatize(word) for word in some_string.split()])
+    some_string = ' '.join(
+        [lemmatizer.lemmatize(word, 'v') for word in some_string.split()])
+    some_string = ' '.join(
+        [lemmatizer.lemmatize(word, 'a') for word in some_string.split()])
+    some_string = ' '.join(
+        [lemmatizer.lemmatize(word, 'r') for word in some_string.split()])
+    return some_string
 
 def stem(some_string):
     '''
