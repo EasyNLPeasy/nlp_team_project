@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Union, cast
 import requests
 import itertools
 import time
+from requests import get
+from bs4 import BeautifulSoup
 
 from env import github_token, github_username
 
@@ -107,3 +109,45 @@ def scrape_github_data() -> List[Dict[str, str]]:
 if __name__ == "__main__":
     data = scrape_github_data()
     json.dump(data, open("data2.json", "w"), indent=1)
+
+def get_urls():
+    '''
+    This function queries github and returns a list of the
+    trending repository for the day, week, and month for each of
+    the following languages: python, javascript, rust
+    
+    Arguments: None
+    
+    Returns: A python list of urls of repositories formatted for github rest api calls.
+    '''
+    # establish an empty list for repo urls
+    REPOS = []
+    # establish the programming languages to be queried
+    languages = ['python', 'javascript', 'rust']
+    # establish the periods to be queried
+    periods = ['daily', 'weekly', 'monthly']
+    # generate a list of tuples of all the combinations of language and period
+    combinations = list(itertools.product(languages, periods))
+    # create list of base_page urls 
+    base_pages = [
+        f'https://github.com/trending/{combination[0]}?since={combination[1]}&spoken_language_code=en'
+        for combination in combinations]
+    headers = {"Authorization": f"token {github_token}", "User-Agent": github_username}
+    # request daily trending repos
+    for page in base_pages:
+        response = get(page, headers=headers)
+        # print response
+        print(response)
+        # if response code is 2xx then parse with beautiful soup and add hrefs of repos to REPOS
+        if response.status_code // 100 == 2:
+            soup = BeautifulSoup(response.content, 'html.parser')
+            urls = soup.find_all('h2')
+            [REPOS.append('.' + url.find('a')['href']) for url in urls if url.find('a') is not None]
+            print(len(REPOS))
+            print(REPOS)
+            time.sleep(15)  # pause for 15 seconds between requests
+        # if response code is not 2xx then print 'there was a response error'
+        else:
+            print('There was a response error')
+    return list(set(REPOS))
+        
