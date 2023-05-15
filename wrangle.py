@@ -11,6 +11,7 @@ import pandas as pd
 import os
 import acquire as a
 from sklearn.model_selection import train_test_split
+import nltk.sentiment
 
 def acquire_github_data():
     '''
@@ -85,7 +86,7 @@ def stem(some_string):
     return ' '.join(
         [stemmer.stem(word) for word in some_string.split()])
 
-def remove_stopwords(some_string, extra_words=[], keep_words=[]):
+def remove_stopwords(some_string, extra_words=['python', 'Python', 'Rust', 'rust', 'JavaScript', 'javascript'], keep_words=[]):
     '''
     The function takes in a string as well as two optional lists.
     The parameter 'extra_words' is a list of string swhich should be 
@@ -98,7 +99,7 @@ def remove_stopwords(some_string, extra_words=[], keep_words=[]):
     return ' '.join([word for word in some_string.split()
                      if word not in stopwords_custom])
 
-def transform_data(df, extra_words=['python', 'Python', 'Rust', 'rust', 'JavaScript', 'javascript'], keep_words=[]):
+def transform_data(df):
     '''
     The function take in a dataframe and creates a new column to contain the
     changes from the functions called. Returns a dataframe.
@@ -119,6 +120,12 @@ def prepare_github_df():
     df_cleaned = transform_data(df)
     return df_cleaned
 
+def get_word_count(train, validate, test):
+    train['word_count'] = train['clean'].apply(lambda x: len(x.split()))
+    validate['word_count'] = validate['clean'].apply(lambda x: len(x.split()))
+    test['word_count'] = test['clean'].apply(lambda x: len(x.split()))
+    return train, validate, test
+
 # Use the following function for Exploring the data
 def split_data():
     '''
@@ -133,6 +140,13 @@ def split_data():
     
     return train, validate, test
 
+def add_sentiment(train, validate, test):
+    sia = nltk.sentiment.SentimentIntensityAnalyzer()
+    train['compound_sentiment'] = train['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
+    validate['compound_sentiment'] = validate['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
+    test['compound_sentiment'] = test['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
+    return train, validate, test
+    
 # Use the following function for modeling
 def modeling_prep():
     '''
