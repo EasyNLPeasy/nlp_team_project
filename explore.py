@@ -275,10 +275,12 @@ def viz_unique_ratios(train):
     ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
     ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
     ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
-    ax[1, 1].set_xviticklabels(ax[1, 1].get_xticks(), rotation = 45)
+    ax[1, 1].set_xiticklabels(ax[1, 1].get_xticks(), rotation = 45)
 
     ax[0, 0].set_title("Distribution of Unique Word Percentages in Python READMEs")
     ax[0, 1].set_title("Distribution of Unique Word Percentages in JavaScript READMEs")
     ax[1, 0].set_title("Distribution of Unique Word Percentages in Rust READMEs")
     ax[1, 1].set_title("Distribution of Unique Word Percentages in All READMEs")
     plt.show()
+
+# Hypothesis Testing
