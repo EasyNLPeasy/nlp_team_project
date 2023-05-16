@@ -146,6 +146,8 @@ def prepare_github_df():
     df_cleaned = transform_data(df)
     df_prepped = feature_engineering(df_cleaned)
     df_sentiment = add_sentiment(df_prepped)
+    df_sentiment['num_unique'] = df_sentiment['lemmatized'].apply(lambda x: len(set(x.split())))
+    df_sentiment['percent_unique'] = round(((df_sentiment.num_unique / df_sentiment.word_count) * 100), 2)
     return df_sentiment
 
 # Use the following function for Exploring the data

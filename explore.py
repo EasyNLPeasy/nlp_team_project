@@ -257,3 +257,28 @@ def viz_stopword_ratios(train):
     ax[1, 0].set_title("Distribution of Stopword Percentages in Rust READMEs")
     ax[1, 1].set_title("Distribution of Stopword Percentages in All READMEs")
     plt.show()
+
+def viz_unique_ratios(train):
+
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(rows, cols, figsize=(15, 15))
+    
+    python_count = train[train['language'] == 'Python']
+    java_count = train[train['language'] == 'JavaScript']
+    rust_count = train[train['language'] == 'Rust']
+    
+    ax[0, 0].hist(python_count.percent_unique, color='violet', alpha=.5, edgecolor='black')
+    ax[0, 1].hist(java_count.percent_unique, color='indigo', alpha=.5, edgecolor='black')
+    ax[1, 0].hist(rust_count.percent_unique, color='purple', alpha=.5, edgecolor='black')
+    ax[1, 1].hist(train.percent_unique, color='plum', alpha=.5, edgecolor='black')
+
+    ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
+    ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
+    ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
+    ax[1, 1].set_xviticklabels(ax[1, 1].get_xticks(), rotation = 45)
+
+    ax[0, 0].set_title("Distribution of Unique Word Percentages in Python READMEs")
+    ax[0, 1].set_title("Distribution of Unique Word Percentages in JavaScript READMEs")
+    ax[1, 0].set_title("Distribution of Unique Word Percentages in Rust READMEs")
+    ax[1, 1].set_title("Distribution of Unique Word Percentages in All READMEs")
+    plt.show()
