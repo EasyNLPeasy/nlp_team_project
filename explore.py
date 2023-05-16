@@ -49,7 +49,7 @@ def get_word_count_frequency_df():
     
     all_freqs = pd.concat([python_freq, java_freq, rust_freq, all_freq], 
                       axis=1).fillna(0).astype(int)
-    all_freqs.columns =['python', 'java', 'rust', 'all']
+    all_freqs.columns =['python', 'javascript', 'rust', 'all']
     return all_freqs
 
 def viz_top_word_freqs():
