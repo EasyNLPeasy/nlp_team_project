@@ -43,6 +43,7 @@ def normalize(some_string):
     Returns the string.
     '''
     some_string = unicodedata.normalize('NFKD', some_string).encode('ascii', 'ignore').decode('utf-8')
+    some_string = re.sub(r"\r?\n","", some_string)
     some_string = re.sub(r'[^a-zA-Z0-9\'\s]', '', some_string)
     return some_string
 
@@ -105,10 +106,35 @@ def transform_data(df):
     changes from the functions called. Returns a dataframe.
     '''
     df = df.rename(columns={'readme_contents': 'original'})
-    df['clean'] = df['original'].apply(basic_clean).apply(
-        tokenize).apply(remove_stopwords)
+    df['basic_clean'] = df['original'].apply(basic_clean)
+    df['clean'] = df['basic_clean'].apply(tokenize).apply(remove_stopwords)
     df['stemmed'] = df['clean'].apply(stem)
     df['lemmatized'] = df['stemmed'].apply(lemmatize)
+    return df
+
+def get_word_count(df):
+    df['word_count'] = df['basic_clean'].apply(lambda x: len(x.split()))
+    return df
+
+def count_stopwords(some_string):
+    stopwords_custom = set(stopwords.words('english'))
+    stops = ' '.join([word for word in some_string.split()
+                     if word in stopwords_custom])
+    return len(stops.split())
+
+def get_stopword_ratio(df):
+    df['stopword_ratio'] = round(((df['stopword_count'] / df['word_count']) * 100), 2)
+    return df
+
+def feature_engineering(df):
+    df = get_word_count(df)
+    df['stopword_count'] = df['basic_clean'].apply(count_stopwords)
+    df = get_stopword_ratio(df)
+    return df
+
+def add_sentiment(df):
+    sia = nltk.sentiment.SentimentIntensityAnalyzer()
+    df['compound_sentiment'] = df['original'].apply(lambda x: sia.polarity_scores(x)['compound'])
     return df
 
 def prepare_github_df():
@@ -118,13 +144,9 @@ def prepare_github_df():
     '''
     df = acquire_github_data()
     df_cleaned = transform_data(df)
-    return df_cleaned
-
-def get_word_count(train, validate, test):
-    train['word_count'] = train['clean'].apply(lambda x: len(x.split()))
-    validate['word_count'] = validate['clean'].apply(lambda x: len(x.split()))
-    test['word_count'] = test['clean'].apply(lambda x: len(x.split()))
-    return train, validate, test
+    df_prepped = feature_engineering(df_cleaned)
+    df_sentiment = add_sentiment(df_prepped)
+    return df_sentiment
 
 # Use the following function for Exploring the data
 def split_data():
@@ -139,13 +161,6 @@ def split_data():
     train, validate = train_test_split(train_validate, random_state = 1349, train_size=.7, stratify=train_validate.language)
     
     return train, validate, test
-
-def add_sentiment(train, validate, test):
-    sia = nltk.sentiment.SentimentIntensityAnalyzer()
-    train['compound_sentiment'] = train['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
-    validate['compound_sentiment'] = validate['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
-    test['compound_sentiment'] = test['clean'].apply(lambda x: sia.polarity_scores(x)['compound'])
-    return train, validate, test
     
 # Use the following function for modeling
 def modeling_prep():
@@ -155,9 +170,10 @@ def modeling_prep():
     the target of 'langauge', and X contains the README content.
     '''
     train, validate, test = split_data()
-    X_train = train['lemmatized']
-    X_validate = validate['lemmatized']
-    X_test = test['lemmatized']
+    X_cols = ['lemmatized', 'word_count', 'stopword_count', 'stopword_ratio', 'compound_ratio']
+    X_train = train[X_cols]
+    X_validate = validate[X_cols]
+    X_test = test[X_cols]
     y_train = train['language']
     y_validate = validate['language']
     y_test = test['language']

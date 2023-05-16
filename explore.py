@@ -171,6 +171,7 @@ def viz_all_trigrams():
     plt.ylabel('Top Trigrams Used')
     plt.show()
 
+# Word Clouds
 def viz_python_word_cloud():
     language_words_only = get_only_alphabetical_words()
     p = language_words_only[language_words_only['python_words'].isna() == False]
@@ -209,26 +210,50 @@ def viz_all_word_cloud():
 
 def viz_word_counts(train):
 
-    # plot to visualize actual vs predicted models
-    fig, (ax0, ax1, ax2, ax3) = plt.subplots(4, 1, figsize=(15, 40))
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(rows, cols, figsize=(15, 15))
     
     python_count = train[train['language'] == 'Python']
     java_count = train[train['language'] == 'JavaScript']
     rust_count = train[train['language'] == 'Rust']
     
-    ax0.hist(python_count.word_count, color='violet', alpha=.5, edgecolor='black')
-    ax1.hist(java_count.word_count, color='indigo', alpha=.5, edgecolor='black')
-    ax2.hist(rust_count.word_count, color='purple', alpha=.5, edgecolor='black')
-    ax3.hist(train.word_count, color='plum', alpha=.5, edgecolor='black')
+    ax[0, 0].hist(python_count.word_count, color='violet', alpha=.5, edgecolor='black')
+    ax[0, 1].hist(java_count.word_count, color='indigo', alpha=.5, edgecolor='black')
+    ax[1, 0].hist(rust_count.word_count, color='purple', alpha=.5, edgecolor='black')
+    ax[1, 1].hist(train.word_count, color='plum', alpha=.5, edgecolor='black')
 
-    ax0.set_xticklabels(ax0.get_xticks(), rotation = 45)
-    ax1.set_xticklabels(ax1.get_xticks(), rotation = 45)
-    ax2.set_xticklabels(ax2.get_xticks(), rotation = 45)
-    ax3.set_xticklabels(ax3.get_xticks(), rotation = 45)
+    ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
+    ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
+    ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
+    ax[1, 1].set_xticklabels(ax[1, 1].get_xticks(), rotation = 45)
 
-    ax0.set_title("Distribution of Word Counts in Python READMEs")
-    ax1.set_title("Distribution of Word Counts in JavaScript READMEs")
-    ax2.set_title("Distribution of Word Counts in Rust READMEs")
-    ax3.set_title("Distribution of Word Counts in All READMEs")
+    ax[0, 0].set_title("Distribution of Word Counts in Python READMEs")
+    ax[0, 1].set_title("Distribution of Word Counts in JavaScript READMEs")
+    ax[1, 0].set_title("Distribution of Word Counts in Rust READMEs")
+    ax[1, 1].set_title("Distribution of Word Counts in All READMEs")
     plt.show()
 
+def viz_stopword_ratios(train):
+
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(rows, cols, figsize=(15, 15))
+    
+    python_count = train[train['language'] == 'Python']
+    java_count = train[train['language'] == 'JavaScript']
+    rust_count = train[train['language'] == 'Rust']
+    
+    ax[0, 0].hist(python_count.stopword_ratio, color='violet', alpha=.5, edgecolor='black')
+    ax[0, 1].hist(java_count.stopword_ratio, color='indigo', alpha=.5, edgecolor='black')
+    ax[1, 0].hist(rust_count.stopword_ratio, color='purple', alpha=.5, edgecolor='black')
+    ax[1, 1].hist(train.stopword_ratio, color='plum', alpha=.5, edgecolor='black')
+
+    ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
+    ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
+    ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
+    ax[1, 1].set_xticklabels(ax[1, 1].get_xticks(), rotation = 45)
+
+    ax[0, 0].set_title("Distribution of Stopword Percentages in Python READMEs")
+    ax[0, 1].set_title("Distribution of Stopword Percentages in JavaScript READMEs")
+    ax[1, 0].set_title("Distribution of Stopword Percentages in Rust READMEs")
+    ax[1, 1].set_title("Distribution of Stopword Percentages in All READMEs")
+    plt.show()
