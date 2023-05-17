@@ -268,7 +268,7 @@ def dt_classification_plus(df, df_val, target, least_min_samples_leaf=1,
                             criterion='gini',
                             min_samples_leaf=hyperparams[0],
                             max_depth=hyperparams[1], 
-                            random_state=9751)
+                            random_state=23)
         dt.fit(X_train, y_train)
         preds = dt.predict(X_train)
         accuracy_train = dt.score(X_train, y_train)
@@ -561,4 +561,51 @@ def model_data_plus(df, df_val, target):
     return df
     
     
+def best_model_on_test(df, df_validate, df_test, target, n_neighbors=[16]):
+    '''
+    Perform KNN classification on the test data with the best hyperparameters from 
+    the validate set .
+
+    Args:
+        df (DataFrame): The training DataFrame containing the feature columns 
+        and the target column.
+        df_val (DataFrame): The test DataFrame containing the feature 
+        columns and the target column.
+        target (str): The name of the target column.
+        n_neighbors: the k-number of neighbors to test
+    Returns:
+        DataFrame: A DataFrame containing the hyperparameters and their 
+        corresponding accuracy scores on the training and test data. An 
+        'algorithm' column is added to denote knn.
+    '''
+    # define and split features and target
+    X_train = df['lemmatized']
+    y_train = df[target]
+    X_validate = df_validate['lemmatized']
+    y_validate = df_validate[target]
+    X_test = df_test['lemmatized']
+    y_test = df_test[target]
     
+    # TFIDF vectorize the lemmatized text corpus
+    tfidf = TfidfVectorizer()
+    X_train = tfidf.fit_transform(X_train)
+    X_validate = tfidf.transform(X_validate)
+    X_test = tfidf.transform(X_test)
+    
+    knn_models = {}
+    hyper_list = n_neighbors
+    
+    for hyperparams in hyper_list:
+        knn = KNeighborsClassifier(n_neighbors=hyperparams)
+        knn.fit(X_train, y_train)
+        preds = knn.predict(X_train)
+        accuracy_train = knn.score(X_train, y_train)
+        accuracy_validate = knn.score(X_validate, y_validate)
+        accuracy_test = knn.score(X_test, y_test)
+        knn_models[hyperparams] = accuracy_train, accuracy_validate, accuracy_test
+   
+    df = pd.DataFrame([{'hyperparams': k, 'accuracy_train': v[0],
+                          'accuracy_validate': v[1], 'accuracy_test': v[2]} for k, v in knn_models.items()])
+    df['algorithm'] = 'knn'
+    
+    return df

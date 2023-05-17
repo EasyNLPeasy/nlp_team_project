@@ -52,19 +52,18 @@ Webscrapin
 
 | Attribute | Description of Attribute |
 | :---------| :------------------------ |
-| fixed acidity | most acids involved with wine or fixed or nonvolatile (do not evaporate readily) |
-| volatile acidity | the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste |
-| citric acid | found in small quantities, citric acid can add 'freshness' and flavor to wines |
-| residual sugar | the amount of sugar remaining after fermentation stops, it's rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet |
-| chlorides | the amount of salt in the wine |
-| free sulfur dioxide | the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine |
-| total sulfur dioxide | amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine |
-| density | the density of water is close to that of water depending on the percent alcohol and sugar content |
-| pH | describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale |
-| sulphates | a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant |
-| alcohol | the percent alcohol content of the wine |
-| red | the type of wine |
-| white | the type of wine |
+| basic_clean | Original README text converted to all lowercase and characters normalized to 'NFKD' then encoded to ascii and decoded back to utf-8. Regular expression were then applied to replace all occurrences of newline characters carriage returns and match and remove any character that is not a letter (uppercase or lowercase), digit, apostrophe ('), or whitespace. |
+| clean | A column with the text from basic_clean that is tokenized and has stopwords removed with nltk.tokenize.toktok.ToktokTokenizer() and nltk.corpus.stopwords(). |
+| compound_ratio | The compound ratio is a single numerical value between -1 and +1 that indicates the overall sentiment polarity of a text. |
+| language | The target of modeling. This is the primary coding language of repo. It is either Python, Javascript, or Rust. |
+| lemmatized | A column with the lemmatized versions of the original README texts. Lemmatized with nltk.WordNetLemmatizer(). |
+| num_unique | The number of unique words used in each README. |
+| percent_unique | The percentage of unique words v. total words in each README. |
+| repo | the url extension for the repo. It is formatted for GitHub REST API. Remove leading period and insert https://github.com/ to navigate to repo. |
+| stemmed | A column with the cleaned READMEs where the words have been stemmed using nltk.porter.PorterStemmer(). |
+| stopword_count | A column with a count of the total stopwords in each original README text. |
+| stopword_ratio | A column with the ratio of stopwords to other words in each original README text. |
+| word_count | the total number of words in each README. |
 
 [back to top](#Table-of-Contents)
 ***
