@@ -9,6 +9,7 @@ import re
 from re import match
 from wordcloud import WordCloud
 import nltk.sentiment
+from matplotlib.ticker import FormatStrFormatter
 
 train, validate, test = w.split_data()
 
@@ -56,7 +57,7 @@ def viz_top_word_freqs():
     # Visualization of 15 Most Frequently Occurring Words
     all_freqs = get_word_count_frequency_df()
     colors = ['pink', 'plum', 'purple']
-    all_freqs.sort_values('all', ascending=False)[['python', 'java', 'rust']].head(15).plot.bar(ec='black', color=colors).set(title='15 Most Frequent Words by Language')
+    all_freqs.sort_values('all', ascending=False)[['python', 'javascript', 'rust']].head(15).plot.bar(ec='black', color=colors).set(title='15 Most Frequent Words by Language')
     plt.ylabel('Count of Word Usage')
     plt.xticks(rotation=45)
     plt.show()
@@ -69,7 +70,7 @@ def viz_proportional_word_freq():
     all_freqs.sort_values('all', ascending=False
                        ).head(20).apply(
         lambda row: row/row['all'], axis=1
-    )[['python', 'java', 'rust']].plot.barh(
+    )[['python', 'javascript', 'rust']].plot.barh(
         stacked=True, legend=False, ec='black', 
         width=1, color=colors).set(title='Proportions of the Top 20 Words')
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
@@ -275,12 +276,42 @@ def viz_unique_ratios(train):
     ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
     ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
     ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
-    ax[1, 1].set_xiticklabels(ax[1, 1].get_xticks(), rotation = 45)
+    ax[1, 1].set_xticklabels(ax[1, 1].get_xticks(), rotation = 45)
 
     ax[0, 0].set_title("Distribution of Unique Word Percentages in Python READMEs")
     ax[0, 1].set_title("Distribution of Unique Word Percentages in JavaScript READMEs")
     ax[1, 0].set_title("Distribution of Unique Word Percentages in Rust READMEs")
     ax[1, 1].set_title("Distribution of Unique Word Percentages in All READMEs")
+    plt.show()
+
+def viz_sentiment_dis(train):
+
+    rows, cols = 2, 2
+    fig, ax = plt.subplots(rows, cols, figsize=(15, 15))
+    
+    python_count = train[train['language'] == 'Python']
+    java_count = train[train['language'] == 'JavaScript']
+    rust_count = train[train['language'] == 'Rust']
+    
+    ax[0, 0].hist(python_count.compound_sentiment, color='violet', alpha=.5, edgecolor='black')
+    ax[0, 1].hist(java_count.compound_sentiment, color='indigo', alpha=.5, edgecolor='black')
+    ax[1, 0].hist(rust_count.compound_sentiment, color='purple', alpha=.5, edgecolor='black')
+    ax[1, 1].hist(train.compound_sentiment, color='plum', alpha=.5, edgecolor='black')
+
+    ax[0, 0].set_xticklabels(ax[0, 0].get_xticks(), rotation = 45)
+    ax[0, 1].set_xticklabels(ax[0, 1].get_xticks(), rotation = 45)
+    ax[1, 0].set_xticklabels(ax[1, 0].get_xticks(), rotation = 45)
+    ax[1, 1].set_xticklabels(ax[1, 1].get_xticks(), rotation = 45)
+
+    ax[0, 0].xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    ax[0, 1].xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    ax[1, 0].xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+    ax[1, 1].xaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+
+    ax[0, 0].set_title("Distribution of Sentiment in Python READMEs")
+    ax[0, 1].set_title("Distribution of Sentiment in JavaScript READMEs")
+    ax[1, 0].set_title("Distribution of Sentiment in Rust READMEs")
+    ax[1, 1].set_title("Distribution of Sentiment in All READMEs")
     plt.show()
 
 # Hypothesis Testing
