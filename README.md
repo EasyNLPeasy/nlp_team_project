@@ -43,7 +43,10 @@ To achieve this goal we will work through the steps of the data science pipeline
 
 ### Intro: Background Information
 
-Webscrapin
+We were tasked with acquiring data on at least 100 GitHub repositories in order to use Natural Language Processing(NLP) tools to predict the primary coding language of the repo from the text of the README file (with all mentions of the target languages removed). We explored the GitHub Rest API as well as Beautiful Soup to acquire the data. We used tools from the Natural Language Tool Kit (NLTK) to process README texts into cleaned and lemmatized forms that we then could explore and model.
+
+
+
 
 [back to top](#Table-of-Contents)
 ***
@@ -82,10 +85,12 @@ Webscrapin
 
 ### Data Acquisition and Preparation
 
-- goals
-- tools
-- methods
-- findings
+- **goal:** to acquire trending repository README files and the primary coding language of the repos.
+- **tools:** GitHub REST API, Beautiful Soup, NLTK
+- **methods** 
+    - Acquisition: Used a python script to get URLs of trending repos. GitHub only makes the top 25 available but language and time window parameters can be adjusted, so the script was able to retrieve the top 25 for each of three languages (Python, Rust, and Java were selected) and also check daily, weekly, and monthly lists. After removing duplicates (there was some overlap between the time windows) We were able to retrieve 164 total READMEs: Python 58, JavaScript 56, and Rust 50, on May 14th, 2023.
+    - Preparation:
+- **findings:** GitHub REST API required the URLs to be input as ./repo_name 
 
 [back to top](#Table-of-Contents)
 ***
@@ -189,7 +194,7 @@ Webscrapin
 ### Appendix A: Instructions to Reproduce Work
 
 1. Download project repo here:
-https://github.com/DCWineCO/clustering_wine
+https://github.com/EasyNLPeasy/nlp_team_project
 
 2. Open and Run 'cluster_final_report.ipynb'
 
@@ -198,31 +203,11 @@ https://github.com/DCWineCO/clustering_wine
 [back to top](#Table-of-Contents)
 ***
 
-### Appendix B: Links to Original Research
+### Appendix B: Links
 
-    - summary: https://data.world/food/wine-quality/workspace/project-summary?agentid=food&datasetid=wine-quality
-    - research abstract: https://www.sciencedirect.com/science/article/abs/pii/S0167923609001377?via%3Dihub
-
+  - GitHub provides documentation of the GitHub REST API here: https://docs.github.com/en/rest?apiVersion=2022-11-28
+  - NLTK resoureces can be found here: https://www.nltk.org
 [back to top](#Table-of-Contents)
 ***
-
-### Appendix C: Sources
-
-This dataset is public available for research. The details are described in [Cortez et al., 2009].
-Please include this citation if you plan to use this database:
-
-P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis.
-Modeling wine preferences by data mining from physicochemical properties.
-In Decision Support Systems, Elsevier, 47(4):547-553. ISSN: 0167-9236.
-
-Available at: [@Elsevier] http://dx.doi.org/10.1016/j.dss.2009.05.016
-[Pre-press (pdf)] http://www3.dsi.uminho.pt/pcortez/winequality09.pdf
-[bib] http://www3.dsi.uminho.pt/pcortez/dss09.bib
-
-Title: Wine Quality
-Sources
-Created by: Paulo Cortez (Univ. Minho), Antonio Cerdeira, Fernando Almeida, Telmo Matos and Jose Reis (CVRVV) @ 2009
-
-[back to top](#Table-of-Contents)
 
 
