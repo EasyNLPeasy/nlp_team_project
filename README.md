@@ -138,35 +138,36 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
 
 1. split target from features for all datasets
 
-1. scaled X_train, X_validate, X_test
+1. scaled X_train, X_validate, X_test for models with additional features included (versus models with just vectorized text).
+
 
 [back to top](#Table-of-Contents)
 ***
 
 ### Modeling
 
-1. We chose to treat this as a regression problem
+1. We chose to treat this as a classification problem
 
-1. Regression algorithms used:
+1. Algorithms used:
 
-    a. OLS regressor
+    a. Random Forest Classifier
     
-    b. Tweedie Regressor
+    b. Decision Tree Classifier
     
-    c. Polynomial Features
+    c. KNN Classifier
     
-    d. LassoLars 
+    d. Multinomial Naive Bayes Classifier
 
-1. Findings: Our best model was a Polynomial Regression on all features that decreased errors by 23.35% over baseline
+1. Findings: Best Model Performance on Test Dataset was knn model with k=16 on the out-of-sample data: improved classification accuracy by 60.06% over baseline.
 
 [back to top](#Table-of-Contents)
 ***
 
 ### Model Evaluation
 
-1. established a baseline by testing mean and median quality values as predictions. We found that mean had a slightly lower RMSE and settled on that as a baseline model.
+1. established a baseline by using the most common class ('Python') as the prediction.
 
-1. We used RMSE as our evaluation metric supplemented by plotting overlaid histograms of predicted and actual values to understand where the model performed well and where it didn't.
+1. We used accuracy as our evaluation metric as the classes were well balanced and there was not implicit benefit in detecting false positives v false negatives
 
 [back to top](#Table-of-Contents)
 ***
@@ -184,7 +185,7 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
 
 ### Next Steps
 
-1. add class balancing to model
+1. 
 2. experiment with outlier detection modeling
 3. explore using a classification model
 
@@ -196,7 +197,7 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
 1. Download project repo here:
 https://github.com/EasyNLPeasy/nlp_team_project
 
-2. Open and Run 'cluster_final_report.ipynb'
+2. Open and Run 'github_repos_nlp_report.ipynb'
 
 3. Necessary modules are included in the repo and should not need additional work to run as long as the whole repo is stored in the same directory.
 
