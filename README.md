@@ -73,12 +73,10 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
 
 ### Initial Questions
 
-1. Does alcohol effect wine quality?
-1. Does density effect wine quality?
-1. Do chlorides effect wine quality?
-1. Is there a difference in quality for red or white wine?
-1. Is there a correlation between volatile acidity and quality?
-1. Is there a linear correlation between residual free sulphur and quality?
+1. What are the most frequently used words across the three programming languages and are any of them shared between them?
+2. Are the means of the sentiment values for each language different?
+3. Are the means of stopword ratios different between Python, JavaScript, and Rust READMEs?
+4. Are the means of the unique word percentages between Python, JavaScript, and Rust READMEs different?
 
 [back to top](#Table-of-Contents)
 ***
@@ -92,44 +90,38 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
     - Preparation:
 - **findings:** GitHub REST API required the URLs to be input as ./repo_name 
 
+The wrangle module uses the following steps to clean the README contents:
+
+    lower()
+    unicodedata.normalize to remove any inconsistencies in unicode character encoding
+    .encode to convert the resulting string to the ASCII character set
+    .decode to turn the resulting bytes object back into a string
+    regular expressions cpture groups to isolate words and numbers
+    tokenize to break words and any punctuation left over into discrete units
+    lemmatize to keep only the root words
+    remove stopwords as listed in the english dictionary (according to nltk.corpus)
+
+The following features are engineered:
+
+    count of stopwords
+    ratio of stopwords to all words
+    calcualtion of sentiment
+    number of unique words
+    ratio of unique words to all words
+
+
+
 [back to top](#Table-of-Contents)
 ***
 
 ### Exploratory Data Analysis
 
-1. negative correlations:
-
-    a. fixed acidity
-    
-    b. volatile acidity
-    
-    c. chlorides
-    
-    d. total sulfur dioxide
-    
-    e. density
-    
-2. positive correlations:
-    
-    a. citric acid
-    
-    b. free sulfur dioxide
-    
-    c. alcohol
-    
-    d. is red
-    
-3. no correlation:
-    
-    a. residual sugar
-    
-    b. pH
-    
-    c. sulphates
-    
-4. Clusters:
-
-    We spent some effort examining different combinations of variables for useful clusters to aid in regression or classification, but we did not find any that beat our non-cluster models.
+ - Most frequent of words not shared proportionally
+ - JavaScript contains technical words
+ - Shared words: use, run, install, data
+ - Means differ across features
+ - Sentiment lower in Python
+ - Rust features are uniform
 
 [back to top](#Table-of-Contents)
 ***
@@ -174,20 +166,26 @@ We were tasked with acquiring data on at least 100 GitHub repositories in order 
 
 ### Conclusions
 
-1. We achieved our goals of finding drivers of wine quality as well as creating a model that outperforms baseline predictions of quality.
+1. Engineered features are useful for exploratory data analysis, but not for modeling
 
-1. However, our model did not perform well at predicting high quality wines.
+2. Top words of each language are not shared  
 
-1. We found that almost all features were needed to get the best model.
+3. KNN best for modeling
 
 [back to top](#Table-of-Contents)
 ***
 
 ### Next Steps
 
-1. 
-2. experiment with outlier detection modeling
-3. explore using a classification model
+1. Acquire more READMEs
+
+2. Use Clusters as features
+
+3. Refine regular expressions
+
+4. Use CountVectorization
+
+5. Latent Dirichlet Allocation (LDA)
 
 [back to top](#Table-of-Contents)
 ***
