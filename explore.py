@@ -10,6 +10,7 @@ from re import match
 from wordcloud import WordCloud
 import nltk.sentiment
 from matplotlib.ticker import FormatStrFormatter
+import scipy.stats as stats
 
 train, validate, test = w.split_data()
 
@@ -313,5 +314,3 @@ def viz_sentiment_dis(train):
     ax[1, 0].set_title("Distribution of Sentiment in Rust READMEs")
     ax[1, 1].set_title("Distribution of Sentiment in All READMEs")
     plt.show()
-
-# Hypothesis Testing
