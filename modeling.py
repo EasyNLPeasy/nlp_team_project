@@ -22,6 +22,29 @@ from sklearn.feature_extraction.text import CountVectorizer
 # local modules
 import wrangle as w
 
+
+def baseline_models(df, df_validate, df_test):
+    '''
+    This function takes train, validate, and test dataframes
+    and returns the baseline model accuracy for each set based
+    on predicting the most prevalent class
+    
+    Arguments: train, validate, test dataframes. Target(str)
+    
+    Returns: Dataframe of accuracies for baseline model on 
+    Train, Validate, and Test.
+    '''
+    base_models = {}
+    base_models['train'] = df.language.value_counts().max() / len(df)
+    base_models['validate'] = df_validate.language.value_counts().max() / len(df_validate)
+    base_models['test'] = df_test.language.value_counts().max() / len(df_test)
+   
+    # convert base_models to df for easy viewing
+    df = pd.DataFrame(base_models.values(), index=base_models.keys(), columns=['baseline_accuracy'])
+
+    return df
+    
+
 def rf_classification(df, df_val, target, least_min_samples_leaf=1, 
                       most_min_samples_leaf=10, min_max_depth=1, max_max_depth=10):
     '''
@@ -70,7 +93,6 @@ def rf_classification(df, df_val, target, least_min_samples_leaf=1,
                             max_depth=hyperparams[2], 
                             random_state=9751)
         rf.fit(X_train, y_train)
-        preds = rf.predict(X_train)
         accuracy_train = rf.score(X_train, y_train)
         accuracy_val = rf.score(X_validate, y_validate)
         rf_models[hyperparams] = accuracy_train, accuracy_val
@@ -144,7 +166,6 @@ def rf_classification_plus(df, df_val, target, least_min_samples_leaf=1,
                             max_depth=hyperparams[2], 
                             random_state=9751)
         rf.fit(X_train, y_train)
-        preds = rf.predict(X_train)
         accuracy_train = rf.score(X_train, y_train)
         accuracy_val = rf.score(X_validate, y_validate)
         rf_models[hyperparams] = accuracy_train, accuracy_val
@@ -200,7 +221,6 @@ def dt_classification(df, df_val, target, least_min_samples_leaf=1,
                             max_depth=hyperparams[1], 
                             random_state=9751)
         dt.fit(X_train, y_train)
-        preds = dt.predict(X_train)
         accuracy_train = dt.score(X_train, y_train)
         accuracy_val = dt.score(X_validate, y_validate)
         dt_models[hyperparams] = accuracy_train, accuracy_val
@@ -270,7 +290,6 @@ def dt_classification_plus(df, df_val, target, least_min_samples_leaf=1,
                             max_depth=hyperparams[1], 
                             random_state=23)
         dt.fit(X_train, y_train)
-        preds = dt.predict(X_train)
         accuracy_train = dt.score(X_train, y_train)
         accuracy_val = dt.score(X_validate, y_validate)
         dt_models[hyperparams] = accuracy_train, accuracy_val
@@ -317,7 +336,6 @@ def knn_classification(df, df_val, target, min_n_neighbors=2, max_n_neighbors=20
     for hyperparams in hyper_list:
         knn = KNeighborsClassifier(n_neighbors=hyperparams)
         knn.fit(X_train, y_train)
-        preds = knn.predict(X_train)
         accuracy_train = knn.score(X_train, y_train)
         accuracy_val = knn.score(X_validate, y_validate)
         knn_models[hyperparams] = accuracy_train, accuracy_val
@@ -383,7 +401,6 @@ def knn_classification_plus(df, df_val, target, min_n_neighbors=2, max_n_neighbo
     for hyperparams in hyper_list:
         knn = KNeighborsClassifier(n_neighbors=hyperparams)
         knn.fit(X_train, y_train)
-        preds = knn.predict(X_train)
         accuracy_train = knn.score(X_train, y_train)
         accuracy_val = knn.score(X_validate, y_validate)
         knn_models[hyperparams] = accuracy_train, accuracy_val
@@ -428,7 +445,6 @@ def nb_classification(df, df_val, target, min_alpha=0.1, max_alpha=5.0):
     hyperparams = 'default'
     nb = MultinomialNB()
     nb.fit(X_train, y_train)
-    preds = nb.predict(X_train)
     accuracy_train = nb.score(X_train, y_train)
     accuracy_val = nb.score(X_validate, y_validate)
     nb_models[hyperparams] = accuracy_train, accuracy_val
@@ -488,7 +504,6 @@ def nb_classification_plus(df, df_val, target, min_alpha=0.1, max_alpha=5.0):
     hyperparams = 'default'
     nb = MultinomialNB()
     nb.fit(X_train, y_train)
-    preds = nb.predict(X_train)
     accuracy_train = nb.score(X_train, y_train)
     accuracy_val = nb.score(X_validate, y_validate)
     nb_models[hyperparams] = accuracy_train, accuracy_val
